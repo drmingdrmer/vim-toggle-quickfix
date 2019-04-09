@@ -20,13 +20,23 @@ Or just copy all of the files in to `~/.vim`.
 
 ## Key Binding
 
-To use `Ctrl-g Ctrl-o` to toggle quickfix window,
-`Ctrl-g Ctrl-p` to toggle location window,
+To use `Ctrl-g Ctrl-o` to toggle quickfix and location list window,
 add these following lines into your `.vimrc`:
 
 ```
-nmap <C-g><C-o> <Plug>window:quickfix:toggle
-nmap <C-g><C-p> <Plug>window:location:toggle
+nmap <C-g><C-o> <Plug>window:quickfix:loop
+```
+
+Then `<C-g><C-o>` loops over these 3 state:
+
+```
+                        quickfix  locationlist
+                        --------  ------------
+                        closed    closed
+<C-g><C-o> once         open      closed
+<C-g><C-o> twice        closed    open
+<C-g><C-o> three times  closed    closed
+<C-g><C-o> forth times  ...
 ```
 
 [grep]: https://github.com/vim-scripts/grep.vim.git
