@@ -27,24 +27,67 @@ fun! togglequickfix#IsOpened(typ) "{{{
     return id != 0
 endfunction "}}}
 
+fun! togglequickfix#Has(typ) "{{{
+    if a:typ == "qf"
+        let elts = getqflist()
+    else
+        " query location list window
+        let elts = getloclist(0)
+    endif
+
+    return len(elts) > 0
+endfunction "}}}
+
+" status machine
+"       ql
+"       v
+" xx -> qx -> xl
+" ^           |
+"  `---------'
+let s:sts = {
+      \"xx":"qx",
+      \"ql":"qx",
+      \"qx":"xl",
+      \"xl":"xx",
+      \}
+
 fun! togglequickfix#Loop() "{{{
-    "       ql
-    "       v
-    " xx -> qx -> xl
-    " ^           |
-    "  `---------'
+    let status = ""
     if togglequickfix#IsOpened("qf")
-        if togglequickfix#IsOpened("locl")
-            lclose
+        let status = "q"
+    else
+        let status = "x"
+    endif
+
+    if togglequickfix#IsOpened("locl")
+        let status .= "l"
+    else
+        let status .= "x"
+    endif
+
+    while 1
+        let status = s:sts[status]
+        if status[0] == 'q'
+            if togglequickfix#Has('qf')
+                copen
+            else
+                continue
+            endif
         else
             cclose
-            lwindow
         endif
-    else
-        if togglequickfix#IsOpened("locl")
-            lclose
+
+        if status[1] == 'l'
+            if togglequickfix#Has('locl')
+                lopen
+            else
+                continue
+            endif
         else
-            cwindow
+            lclose
         endif
-    endif
+
+        break
+    endwhile
+
 endfunction "}}}
