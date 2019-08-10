@@ -18,13 +18,13 @@ endfunction "}}}
 
 fun! togglequickfix#IsOpened(typ) "{{{
     if a:typ == "qf"
-        let id = getqflist({'winid' : 1}).winid
+		let ids = getqflist({'winid' : 1})
     else
         " query location list window
-        let id = getloclist(0, {'winid' : 1}).winid
+		let ids = getloclist(0, {'winid' : 1})
     endif
 
-    return id != 0
+	return !empty(ids)
 endfunction "}}}
 
 fun! togglequickfix#Has(typ) "{{{
