@@ -24,7 +24,7 @@ fun! togglequickfix#IsOpened(typ) "{{{
         let ids = getloclist(0, {'winid' : 1})
     endif
 
-    return !empty(ids)
+    return get(ids, "winid", 0) != 0
 endfunction "}}}
 
 fun! togglequickfix#Has(typ) "{{{
